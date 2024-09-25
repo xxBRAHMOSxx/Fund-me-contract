@@ -6,11 +6,15 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 
 contract FundMe{
 
-    uint256 minValueUsd = 5e18;
+    uint256 public minValueUsd = 5e18;
+    address[] public funders;  
+    mapping (address funders => uint256 ammount) addressToAmountFunded;
 
     function fund() public payable  {
 
         require(getConversionRate(msg.value) > minValueUsd,"didnt sent rnough eth");
+        funders.push(msg.sender);
+        addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
     }
 
     function getPrice() public view returns(uint256) {
